@@ -1,0 +1,75 @@
+import { Link, useNavigate } from "react-router-dom";
+// import { useContext } from "react";
+import { useAuth } from "../auth/AuthContext";
+// import { AuthContext } from "../auth/AuthContext";
+
+export default function Navbar() {
+  // const { user, logout } = useContext(AuthContext); 
+  const { user, logout } = useAuth(); 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  return (
+    <nav className="bg-gray-900 text-white p-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link
+          to="/"
+          className="text-xl font-bold text-blue-400 hover:text-blue-300"
+        >
+          UserManagement
+        </Link>
+
+        <div className="flex items-center gap-6">
+          <Link to="/" className="hover:text-blue-300 transition duration-200">
+            Home
+          </Link>
+          <Link
+            to="/about"
+            className="hover:text-blue-300 transition duration-200"
+          >
+            About
+          </Link>
+
+          {/* Account menu */}
+          <div className="relative group">
+            <button className="hover:text-blue-300 focus:outline-none">
+              Account ▾
+            </button>
+            <div className="absolute right-0 hidden group-hover:block bg-white text-black mt-2 py-2 w-40 rounded shadow-lg z-10">
+              {user ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Settings
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="block px-4 py-2 hover:bg-gray-100">
+                  Login
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
