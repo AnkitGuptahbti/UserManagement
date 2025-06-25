@@ -1,6 +1,6 @@
 import Form from "../shared/Form";
 import useUsers from "../hooks/useUsers";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../layouts/Main";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateUser() {
@@ -9,7 +9,7 @@ export default function CreateUser() {
 
   const handleCreate = async (data) => {
     await addUser(data);
-    navigate("/"); 
+    navigate("/");
   };
 
   return (

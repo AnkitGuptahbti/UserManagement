@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function Form({
   initialName = "",
@@ -39,8 +41,6 @@ export default function Form({
     const newErrors = {};
     if (!name.trim()) newErrors.name = "Name is required";
     if (!email.trim()) newErrors.email = "Email is required";
-    // else if (!/^[\w.-]+@[\w.-]+\.\w+$/.test(email))
-    //   newErrors.email = "Invalid email format";
     if (!dob) newErrors.dob = "Date of birth is required";
     return newErrors;
   };
@@ -72,9 +72,10 @@ export default function Form({
         <img
           src={imagePreview}
           alt="Preview"
-          className="w-15 h-15 object-cover "
+          className="w-15 h-15 object-cover rounded-full"
         />
       )}
+
       <input
         type="file"
         accept="image/png, image/jpeg"
@@ -82,24 +83,32 @@ export default function Form({
         className="w-full border p-2 rounded"
       />
 
-      <input
-        type="text"
+      <Input
+        name="name"
+        label="Full Name"
         value={name}
-        placeholder="Full Name"
-        onChange={(e) => setName(e.target.value)}
-        className="w-full border p-2 rounded"
+        onChange={(e) => {
+          setName(e.target.value);
+          setErrors((prev) => ({ ...prev, name: "" }));
+        }}
+        placeholder="Enter your name"
+        error={errors.name}
       />
-      {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 
-      <input
+      <Input
+        name="email"
+        label="Email"
         type="email"
         value={email}
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full border p-2 rounded"
+        onChange={(e) => {
+          setEmail(e.target.value);
+          setErrors((prev) => ({ ...prev, email: "" }));
+        }}
+        placeholder="Enter your email"
+        error={errors.email}
       />
-      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
 
+      {/* Gender */}
       <div className="flex gap-4">
         <label>
           <input
@@ -123,6 +132,7 @@ export default function Form({
         </label>
       </div>
 
+      {/* Role */}
       <select
         value={role}
         onChange={(e) => setRole(e.target.value)}
@@ -133,6 +143,7 @@ export default function Form({
         <option value="admin">Admin</option>
       </select>
 
+      {/* Is Admin */}
       <label className="flex items-center gap-2">
         <input
           type="checkbox"
@@ -142,13 +153,17 @@ export default function Form({
         Is Admin
       </label>
 
-      <input
+      <Input
+        name="dob"
+        label="Date of Birth"
         type="date"
         value={dob}
-        onChange={(e) => setDob(e.target.value)}
-        className="w-full border p-2 rounded"
+        onChange={(e) => {
+          setDob(e.target.value);
+          setErrors((prev) => ({ ...prev, dob: "" }));
+        }}
+        error={errors.dob}
       />
-      {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
 
       <textarea
         rows={3}
@@ -158,12 +173,8 @@ export default function Form({
         className="w-full border p-2 rounded"
       />
 
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-        type="submit"
-      >
-        {buttonText}
-      </button>
+      <Button type="submit">{buttonText}</Button>
+      
     </form>
   );
 }

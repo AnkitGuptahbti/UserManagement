@@ -1,11 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-// import { useContext } from "react";
-import { useAuth } from "../auth/AuthContext";
-// import { AuthContext } from "../auth/AuthContext";
-
+import { useAuth } from "../contexts/AuthContext";
+import { navLinks } from "../utils/constants";
 export default function Navbar() {
-  // const { user, logout } = useContext(AuthContext); 
-  const { user, logout } = useAuth(); 
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,21 +17,21 @@ export default function Navbar() {
           to="/"
           className="text-xl font-bold text-blue-400 hover:text-blue-300"
         >
-          UserManagement
+          User Management
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link to="/" className="hover:text-blue-300 transition duration-200">
-            Home
-          </Link>
-          <Link
-            to="/about"
-            className="hover:text-blue-300 transition duration-200"
-          >
-            About
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="hover:text-blue-300 transition duration-200"
+            >
+              {link.label}
+            </Link>
+          ))}
 
-          {/* Account menu */}
+          {/* Account dropdown */}
           <div className="relative group">
             <button className="hover:text-blue-300 focus:outline-none">
               Account ▾

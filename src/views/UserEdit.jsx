@@ -2,11 +2,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Form from "../shared/Form";
 import { getUserById, updateUser } from "../services/userApi";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../layouts/Main";
 
 export default function EditUser() {
   const { id } = useParams();
-  console.log(id, " t;hisi is params");
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +14,6 @@ export default function EditUser() {
     const fetchUser = async () => {
       try {
         const data = await getUserById(id);
-        console.log(data, "data from edit user");
         setUser(data);
       } catch (err) {
         console.error("Error fetching user", err);
