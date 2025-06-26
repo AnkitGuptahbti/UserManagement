@@ -23,6 +23,7 @@ export default function Form({
   const [dob, setDob] = useState(initialDob);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(initialImage);
+  const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState({});
 
@@ -42,6 +43,7 @@ export default function Form({
     if (!name.trim()) newErrors.name = "Name is required";
     if (!email.trim()) newErrors.email = "Email is required";
     if (!dob) newErrors.dob = "Date of birth is required";
+    if (!password.trim()) newErrors.password = "Password is required";
     return newErrors;
   };
 
@@ -56,6 +58,7 @@ export default function Form({
     const formData = {
       name,
       email,
+      password,
       gender,
       isAdmin,
       role,
@@ -106,6 +109,19 @@ export default function Form({
         }}
         placeholder="Enter your email"
         error={errors.email}
+      />
+
+      <Input
+        name="password"
+        label="Password"
+        type="password"
+        value={password}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          setErrors((prev) => ({ ...prev, password: "" }));
+        }}
+        placeholder="Enter password"
+        error={errors.password}
       />
 
       {/* Gender */}

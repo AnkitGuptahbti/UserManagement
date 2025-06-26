@@ -1,64 +1,68 @@
 const BASE_URL = "http://localhost:5000/api/users";
 
 // Dummy in-memory user list
-// const dummyUsers = [
-//   {
-//     id: 1,
-//     name: "Ankit Gupta",
-//     email: "ankit@example.com",
-//     gender: "male",
-//     isAdmin: true,
-//     role: "admin",
-//     bio: "Loves coding",
-//     dob: "1998-01-01",
-//     image: "https://placehold.co/50"
-//   },
-//   {
-//     id: 2,
-//     name: "Priya Sharma",
-//     email: "priya.sharma@example.com",
-//     gender: "female",
-//     isAdmin: false,
-//     role: "user",
-//     bio: "UI/UX designer",
-//     dob: "1999-03-15",
-//       image: "https://placehold.co/50"
-//   },
-//   {
-//     id: 3,
-//     name: "Rahul Verma",
-//     email: "rahul.verma@example.com",
-//     gender: "male",
-//     isAdmin: false,
-//     role: "manager",
-//     bio: "Handles operations",
-//     dob: "1995-06-25",
-//       image: "https://placehold.co/50"
-//   },
-//   {
-//     id: 4,
-//     name: "Sneha Mehta",
-//     email: "sneha.mehta@example.com",
-//     gender: "female",
-//     isAdmin: true,
-//     role: "admin",
-//     bio: "Team lead",
-//     dob: "1997-09-10",
-//        image: "https://placehold.co/50"
-//   },
-//   {
-//     id: 5,
-//     name: "Amit Singh",
-//     email: "amit.singh@example.com",
-//     gender: "male",
-//     isAdmin: false,
-//     role: "user",
-//     bio: "Frontend developer",
-//     dob: "2000-11-20",
-//        image: "https://placehold.co/50"
-//   }
-// ];
-const dummyUsers = [];
+const dummyUsers = [
+  {
+    id: 1,
+    name: "Ankit Gupta",
+    email: "ankit@example.com",
+    password: "password123",
+    gender: "male",
+    isAdmin: true,
+    role: "admin",
+    bio: "Loves coding",
+    dob: "1998-01-01",
+    image: "https://placehold.co/50"
+  },
+  {
+    id: 2,
+    name: "Priya Sharma",
+    email: "priya.sharma@example.com",
+    password: "password123",
+    gender: "female",
+    isAdmin: false,
+    role: "user",
+    bio: "UI/UX designer",
+    dob: "1999-03-15",
+      image: "https://placehold.co/50"
+  },
+  {
+    id: 3,
+    name: "Rahul Verma",
+    email: "rahul.verma@example.com",
+    password: "password123",
+    gender: "male",
+    isAdmin: false,
+    role: "manager",
+    bio: "Handles operations",
+    dob: "1995-06-25",
+      image: "https://placehold.co/50"
+  },
+  {
+    id: 4,
+    name: "Sneha Mehta",
+    email: "sneha.mehta@example.com",
+    password: "password123",
+    gender: "female",
+    isAdmin: true,
+    role: "admin",
+    bio: "Team lead",
+    dob: "1997-09-10",
+       image: "https://placehold.co/50"
+  },
+  {
+    id: 5,
+    name: "Amit Singh",
+    email: "amit.singh@example.com",
+    password: "password123",
+    gender: "male",
+    isAdmin: false,
+    role: "user",
+    bio: "Frontend developer",
+    dob: "2000-11-20",
+       image: "https://placehold.co/50"
+  }
+];
 
 export const getUsers = async () => {
   // const res = await fetch(BASE_URL);
@@ -93,6 +97,7 @@ export const getUserById = async (id) => {
 export const createUser = async ({
   name,
   email,
+  password,
   gender,
   isAdmin,
   role,
@@ -108,6 +113,7 @@ export const createUser = async ({
         id: dummyUsers.length + 1,
         name,
         email,
+        password,
         gender,
         isAdmin,
         role,
@@ -158,3 +164,14 @@ export const deleteUser = async (id) => {
   if (!result.success) throw new Error("Failed to delete user");
   return true;
 };
+
+
+
+// services/userApi.js
+// import { apiRequest } from "./api";
+// const BASE_URL = "http://localhost:5000/api/users";
+// export const getUsers = () => apiRequest(BASE_URL);
+// export const getUserById = (id) => apiRequest(`${BASE_URL}/${id}`);
+// export const createUser = (data) => apiRequest(BASE_URL, "POST", data);
+// export const updateUser = (id, data) => apiRequest(`${BASE_URL}/${id}`, "PUT", data);
+// export const deleteUser = (id) => apiRequest(`${BASE_URL}/${id}`, "DELETE");

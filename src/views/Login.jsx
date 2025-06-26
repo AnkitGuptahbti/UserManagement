@@ -18,7 +18,7 @@ export default function Login() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length) {
@@ -26,8 +26,8 @@ export default function Login() {
       return;
     }
 
-    const success = login(email, password);
-    if (success) {
+    const result = await login(email, password);
+    if (result.success) {
       navigate("/");
     } else {
       setError("Invalid email or password");

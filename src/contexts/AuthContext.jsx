@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { getUsers } from "../services/userApi";
 
 export const AuthContext = createContext();
 
@@ -14,9 +15,13 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = (email, password ) => {
-    if (email === "admin@gmail.com" && password === "admin") {
-      const userData = { email, name: "Admin", role: "admin" };
+  const login = async (email, password) => {
+    const users = await getUsers();
+    const foundUser = users.find(
+      (u) => u.email === email && u.password === password 
+    );
+    if (foundUser ) {
+      const userData = { email: foundUser.email, name: foundUser.name, role: foundUser.role };
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       return { success: true };
