@@ -1,3 +1,4 @@
+import { Input as AntInput } from "antd";
 export default function Input({
   label,
   name,
@@ -10,13 +11,13 @@ export default function Input({
   ...rest
 }) {
   return (
-    <div className="relative mb-4">
+    <div className="relative mb-4 ">
       {label && (
         <label htmlFor={name} className="block mb-1 font-medium text-sm">
           {label}
         </label>
       )}
-      <input
+      <AntInput
         id={name}
         name={name}
         type={type}
@@ -29,7 +30,7 @@ export default function Input({
         {...rest}
       />
       {error && (
-        <p className="absolute left-0 top-full  text-red-500 text-sm">
+        <p className="absolute bottom-[-30px]   text-red-500 text-sm">
           {error}
         </p>
       )}

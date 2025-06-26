@@ -15,8 +15,8 @@ export default function AppRoutes() {
 
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
-          <Route path="/create" element={<CreateUser />} />
-          <Route path="/edit/:id" element={<EditUser />} />
+          <Route path="/user/create" element={<CreateUser />} />
+          <Route path="/user/edit/:id" element={<EditUser />} />
         </Route>
 
         <Route

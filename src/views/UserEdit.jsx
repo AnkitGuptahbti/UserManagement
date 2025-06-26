@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Form from "../shared/Form";
+import CreateUserForm from "../components/CreateUserForm";
 import { getUserById, updateUser } from "../services/userApi";
 import MainLayout from "../layouts/Main";
 
@@ -36,7 +36,7 @@ export default function EditUser() {
     <MainLayout>
       <div className="mx-auto w-[50%]">
         <h1 className="text-xl font-bold mb-4">Edit User</h1>
-        <Form
+        <CreateUserForm
           initialName={user.name}
           initialEmail={user.email}
           gender={user.gender}

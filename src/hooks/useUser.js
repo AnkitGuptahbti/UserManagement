@@ -6,7 +6,7 @@ import {
   deleteUser
 } from "../services/userApi";
 
-export default function useUsers() {
+export default function useUser() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 

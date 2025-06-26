@@ -1,80 +1,70 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import { Table, Avatar, Dropdown, Menu } from "antd";
+import { MoreOutlined } from "@ant-design/icons";
 
 export default function UserList({ users, onDelete }) {
-  const [openDropdownId, setOpenDropdownId] = useState(null);
-
-  const toggleDropdown = (userId) => {
-    setOpenDropdownId((prevId) => (prevId === userId ? null : userId));
-  };
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (_, user) => (
+        <div className="flex items-center gap-2">
+          <Avatar src={user.image || "https://via.placeholder.com/40"} />
+          <span className="font-medium">{user.name}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      render: (role) => <span className="capitalize">{role}</span>,
+    },
+    {
+      title: "DOB",
+      dataIndex: "dob",
+      key: "dob",
+    },
+    {
+      title: "",
+      key: "actions",
+      render: (_, user) => {
+        const menu = (
+          <Menu>
+            <Menu.Item key="edit">
+              <Link to={`/user/edit/${user.id}`}>Edit</Link>
+            </Menu.Item>
+            <Menu.Item key="delete" danger onClick={() => onDelete(user.id)}>
+              Delete
+            </Menu.Item>
+          </Menu>
+        );
+        return (
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <MoreOutlined className="cursor-pointer text-gray-600 hover:text-black" />
+          </Dropdown>
+        );
+      },
+    },
+  ];
 
   return (
-    <div className="space-y-1">
-      {/* Header */}
-      <div className="grid grid-cols-[1.5fr_2fr_1fr_1fr_40px] font-semibold items-center text-gray-700 bg-gray-200 p-2 rounded mb-2 h-[50px]">
-        <span>Name</span>
-        <span>Email</span>
-        <span>Role</span>
-        <span>DOB</span>
-      </div>
-
-      {users && users.length > 0 ? (
-        users.map((user) => (
-          <div
-            key={user.id}
-            className="grid grid-cols-[1.5fr_2fr_1fr_1fr_40px] items-center bg-white py-[4px] px-2 rounded shadow-sm hover:shadow-md transition relative"
-          >
-            {/* Name & Avatar */}
-            <div className="flex items-center gap-2">
-              <img
-                src={user.image || "https://via.placeholder.com/40"}
-                alt={user.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <span className="font-medium">{user.name}</span>
-            </div>
-
-            {/* Email */}
-            <span>{user.email}</span>
-
-            {/* Role */}
-            <span className="capitalize">{user.role}</span>
-
-            {/* DOB */}
-            <span>{user.dob}</span>
-
-            {/* Three-dot menu */}
-            <div className="flex justify-center relative ">
-              <button
-                onClick={() => toggleDropdown(user.id)}
-                className="text-gray-500 hover:text-gray-800"
-              >
-                <MoreVertical size={18} className="hover:cursor-pointer" />
-              </button>
-
-              {openDropdownId === user.id && (
-                <div className="absolute right-0 top-6 bg-white shadow-lg rounded w-28 z-10   ">
-                  <Link
-                    to={`/edit/${user.id}`}
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => onDelete(user.id)}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        ))
-      ) : (
-        <p className="text-center text-2xl">No users found</p>
-      )}
+    <div>
+      <Table
+        dataSource={users}
+        columns={columns}
+        rowKey="id"
+        // pagination={true}
+        pagination={{ pageSize: 10 }}
+        bordered
+        size="small"
+      />
     </div>
   );
 }

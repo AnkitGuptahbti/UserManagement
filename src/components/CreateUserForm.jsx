@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useForm } from "../hooks/useForm";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { validateEmail } from "../utils/validators";
 
 export default function Form({
   initialName = "",
@@ -14,59 +16,54 @@ export default function Form({
   onSubmit,
   buttonText = "Add User",
 }) {
-  const [name, setName] = useState(initialName);
-  const [email, setEmail] = useState(initialEmail);
-  const [gender, setGender] = useState(initialGender);
-  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
-  const [role, setRole] = useState(initialRole);
-  const [bio, setBio] = useState(initialBio);
-  const [dob, setDob] = useState(initialDob);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(initialImage);
-  const [password, setPassword] = useState("");
 
-  const [errors, setErrors] = useState({});
+  const { values, errors, handleChange, handleSubmit, setValues } = useForm({
+    config: {
+      name: {
+        required: true,
+        label: "Name",
+        validate: (val) =>
+          val.length < 3 ? "Name must be at least 3 characters" : null,
+      },
+      email: {
+        required: true,
+        label: "Email",
+        validate: (val) => (!validateEmail(val) ? "Invalid email" : null),
+      },
+      password: {
+        required: true,
+        label: "Password",
+        validate: (val) => (val.length < 6 ? "Min 6 characters" : null),
+      },
+      dob: { required: true, label: "Date of Birth" },
+    },
+    initialValues: {
+      name: initialName,
+      email: initialEmail,
+      password: "",
+      gender: initialGender,
+      isAdmin: initialIsAdmin,
+      role: initialRole,
+      bio: initialBio,
+      dob: initialDob,
+    },
+    onSubmit: (data) => {
+      onSubmit({
+        ...data,
+        image: imagePreview,
+      });
+    },
+  });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setImageFile(file);
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!name.trim()) newErrors.name = "Name is required";
-    if (!email.trim()) newErrors.email = "Email is required";
-    if (!dob) newErrors.dob = "Date of birth is required";
-    if (!password.trim()) newErrors.password = "Password is required";
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    const formData = {
-      name,
-      email,
-      password,
-      gender,
-      isAdmin,
-      role,
-      bio,
-      dob,
-      image: imagePreview,
-    };
-    onSubmit(formData);
   };
 
   return (
@@ -89,11 +86,8 @@ export default function Form({
       <Input
         name="name"
         label="Full Name"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-          setErrors((prev) => ({ ...prev, name: "" }));
-        }}
+        value={values.name}
+        onChange={handleChange("name")}
         placeholder="Enter your name"
         error={errors.name}
       />
@@ -102,11 +96,8 @@ export default function Form({
         name="email"
         label="Email"
         type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-          setErrors((prev) => ({ ...prev, email: "" }));
-        }}
+        value={values.email}
+        onChange={handleChange("email")}
         placeholder="Enter your email"
         error={errors.email}
       />
@@ -115,11 +106,8 @@ export default function Form({
         name="password"
         label="Password"
         type="password"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-          setErrors((prev) => ({ ...prev, password: "" }));
-        }}
+        value={values.password}
+        onChange={handleChange("password")}
         placeholder="Enter password"
         error={errors.password}
       />
@@ -131,8 +119,8 @@ export default function Form({
             type="radio"
             value="male"
             name="gender"
-            checked={gender === "male"}
-            onChange={() => setGender("male")}
+            checked={values.gender === "male"}
+            onChange={() => setValues((prev) => ({ ...prev, gender: "male" }))}
           />{" "}
           Male
         </label>
@@ -141,8 +129,10 @@ export default function Form({
             type="radio"
             value="female"
             name="gender"
-            checked={gender === "female"}
-            onChange={() => setGender("female")}
+            checked={values.gender === "female"}
+            onChange={() =>
+              setValues((prev) => ({ ...prev, gender: "female" }))
+            }
           />{" "}
           Female
         </label>
@@ -150,8 +140,8 @@ export default function Form({
 
       {/* Role */}
       <select
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
+        value={values.role}
+        onChange={handleChange("role")}
         className="w-full border p-2 rounded"
       >
         <option value="user">User</option>
@@ -163,8 +153,8 @@ export default function Form({
       <label className="flex items-center gap-2">
         <input
           type="checkbox"
-          checked={isAdmin}
-          onChange={(e) => setIsAdmin(e.target.checked)}
+          checked={values.isAdmin}
+          onChange={handleChange("isAdmin")}
         />
         Is Admin
       </label>
@@ -173,24 +163,25 @@ export default function Form({
         name="dob"
         label="Date of Birth"
         type="date"
-        value={dob}
-        onChange={(e) => {
-          setDob(e.target.value);
-          setErrors((prev) => ({ ...prev, dob: "" }));
-        }}
+        value={values.dob}
+        onChange={handleChange("dob")}
         error={errors.dob}
       />
 
       <textarea
         rows={3}
-        value={bio}
-        onChange={(e) => setBio(e.target.value)}
+        value={values.bio}
+        onChange={handleChange("bio")}
         placeholder="Short Bio"
         className="w-full border p-2 rounded"
       />
 
-      <Button type="submit">{buttonText}</Button>
-      
+      <Button
+        className="bg-blue-600 text-white px-2 py-1 rounded"
+        htmlType="submit"
+      >
+        {buttonText}
+      </Button>
     </form>
   );
 }
