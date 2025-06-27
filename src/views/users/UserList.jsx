@@ -38,7 +38,7 @@ export default function UserList({ users, onDelete }) {
         const menu = (
           <Menu>
             <Menu.Item key="edit">
-              <Link to={`/user/edit/${user.id}`}>Edit</Link>
+              <Link to={`/users/edit/${user.id}`}>Edit</Link>
             </Menu.Item>
             <Menu.Item key="delete" danger onClick={() => onDelete(user.id)}>
               Delete

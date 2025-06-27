@@ -2,10 +2,9 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../views/Home";
-import EditUser from "../views/UserEdit";
-import CreateUser from "../views/UserCreate";
 import Login from "../views/Login";
 import PrivateRoute from "./PrivateRoute";
+import UserForm from "../views/users/UserForm";
 
 export default function AppRoutes() {
   return (
@@ -15,8 +14,8 @@ export default function AppRoutes() {
 
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
-          <Route path="/user/create" element={<CreateUser />} />
-          <Route path="/user/edit/:id" element={<EditUser />} />
+          <Route path="/users/new" element={<UserForm />} />
+          <Route path="/users/edit/:id" element={<UserForm />} />
         </Route>
 
         <Route

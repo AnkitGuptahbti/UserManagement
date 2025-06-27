@@ -30,7 +30,7 @@ export default function Input({
         {...rest}
       />
       {error && (
-        <p className="absolute bottom-[-30px]   text-red-500 text-sm">
+        <p className="absolute bottom-[-25px]   text-red-500 text-[12px] ">
           {error}
         </p>
       )}

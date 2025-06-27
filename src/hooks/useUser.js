@@ -3,7 +3,8 @@ import {
   getUsers,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserById
 } from "../services/userApi";
 
 export default function useUser() {
@@ -41,5 +42,9 @@ export default function useUser() {
     fetchUsers();
   };
 
-  return { users, loading, addUser, editUser, removeUser };
+  const getUserBy_Id = async (id) => {
+    return await getUserById(id);
+    
+  }
+  return { users, loading, addUser, editUser, removeUser ,getUserBy_Id};
 }

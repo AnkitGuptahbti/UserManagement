@@ -11,23 +11,30 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const { values, errors, handleChange, handleSubmit, setErrors } = useForm({
-    config: {
-      email: {
-        required: true,
-        label: "Email",
-        validate: (val) =>
-          !validateEmail(val) ? "Invalid email" : null,
-      },
-      password: {
-        required: true,
-        label: "Password",
-      },
+  const config = [
+    {
+      key: "email",
+      required: true,
+      type: "email",
+      placeholder: "Enter your email",
+      validate: (val) => (!validateEmail(val) ? "Invalid email" : null),
     },
-    initialValues: {
-      email: "",
-      password: "",
+    {
+      key: "password",
+      required: true,
+      type: "password",
+      placeholder: "Enter password",
     },
+  ];
+
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const { values, errors, handleChange, handleSubmit } = useForm({
+    config,
+    initialValues,
     onSubmit: async ({ email, password }) => {
       const result = await login(email, password);
       if (result.success) {
@@ -43,37 +50,26 @@ export default function Login() {
       <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
 
       {authError && (
-        <p className="text-red-600 text-sm text-center mb-4 absolute top-12 left-1/2 transform -translate-x-1/2 ">
+        <p className="text-red-600 text-sm text-center mb-4 absolute top-12 left-1/2 transform -translate-x-1/2">
           {authError}
         </p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          name="email"
-          label="Email"
-          type="email"
-          value={values.email}
-          placeholder="Enter your email"
-          onChange={(e) => {
-            handleChange("email")(e);
-            setAuthError("");
-          }}
-          error={errors.email}
-        />
-
-        <Input
-          name="password"
-          label="Password"
-          type="password"
-          value={values.password}
-          placeholder="Enter your password"
-          onChange={(e) => {
-            handleChange("password")(e);
-            setAuthError("");
-          }}
-          error={errors.password}
-        />
+        {config.map((field) => (
+          <Input
+            key={field.key}
+            name={field.key}
+            type={field.type}
+            value={values[field.key]}
+            onChange={(e) => {
+              handleChange(field.key)(e);
+              setAuthError("");
+            }}
+            placeholder={field.placeholder}
+            error={errors[field.key]}
+          />
+        ))}
 
         <Button
           htmlType="submit"

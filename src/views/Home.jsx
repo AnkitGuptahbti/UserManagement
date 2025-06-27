@@ -1,29 +1,44 @@
-import useUser from "../hooks/useUser";
-import UserList from "./UserList";
-import Main from "../layouts/Main";
+import { Row, Col, Typography, Button, Space, Spin } from "antd";
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
+import useUser from "../hooks/useUser";
+import UserList from "./users/UserList";
+import Main from "../layouts/Main";
+
+const { Title } = Typography;
 
 export default function Home() {
-  const { users, loading, addUser, removeUser } = useUser();
+  const { users, loading, removeUser } = useUser();
 
   return (
     <Main>
-      <div className="w-[60%] mx-auto">
-        <div className="w-100% h-[50px] border- mt-4 mb-4 flex justify-between items-center p-2">
-          <h2 className=" font-bold text-xl">Users</h2>
-          <Link to="/user/create">
-            <Button className="bg-blue-600 text-white px-2 py-1 rounded ">
-              + Add User
-            </Button>
-          </Link>
-        </div>
-        {loading ? (
-          <p>Loading users...</p>
-        ) : (
-          <UserList users={users} onDelete={removeUser} />
-        )}
-      </div>
+      <Row justify="center">
+        <Col xs={24} sm={20} md={16} lg={12}>
+          <Row
+            justify="space-between"
+            align="middle"
+            style={{ margin: "1rem 0", border: "1px solid #ddd", padding: "8px" }}
+          > 
+            <Col>
+              <Title level={4} style={{ margin: 0 }}>
+                Users
+              </Title>
+            </Col>
+            <Col>
+              <Link to="/users/new">
+                <Button type="primary">+ Add User</Button>
+              </Link>
+            </Col>
+          </Row>
+
+          {loading ? (
+            <Row justify="center" style={{ marginTop: "2rem" }}>
+              <Spin tip="Loading users..." />
+            </Row>
+          ) : (
+            <UserList users={users} onDelete={removeUser} />
+          )}
+        </Col>
+      </Row>
     </Main>
   );
 }

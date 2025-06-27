@@ -1,17 +1,27 @@
 import { useRef, useState } from "react";
 
-export function useForm({ config = {}, initialValues = {}, onSubmit }) {
+export function useForm({ config = [], initialValues = {}, onSubmit }) {
+  const configObject = Array.isArray(config)
+    ? config.reduce((acc, field) => {
+        acc[field.key] = field;
+        return acc;
+      }, {})
+    : config;
+
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
+  const [previews, setPreviews] = useState(
+    initialValues.image ? { image: initialValues.image } : {}
+  );
+
   const ref = useRef(false);
 
-  
   const validate = (customValues = values) => {
     const newErrors = {};
 
-    for (const field in config) {
+    for (const field in configObject) {
       const value = customValues[field]?.toString().trim();
-      const rules = config[field];
+      const rules = configObject[field];
 
       if (rules.required && !value) {
         newErrors[field] = "Required";
@@ -28,13 +38,27 @@ export function useForm({ config = {}, initialValues = {}, onSubmit }) {
   };
 
   const handleChange = (field) => (e) => {
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    const updatedValues = { ...values, [field]: value };
+    const type = configObject[field]?.type;
 
-    setValues(updatedValues);
+    if (type === "checkbox") {
+      setValues((prev) => ({ ...prev, [field]: e.target.checked }));
+    } else if (type === "radio") {
+      setValues((prev) => ({ ...prev, [field]: e.target.value }));
+    } else if (type === "image") {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    if (ref.current) {
-      validate(updatedValues); 
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviews((prev) => ({ ...prev, [field]: reader.result }));
+        setValues((prev) => ({ ...prev, [field]: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      const value = e.target.value;
+      const updatedValues = { ...values, [field]: value };
+      setValues(updatedValues);
+      if (ref.current) validate(updatedValues);
     }
   };
 
@@ -52,6 +76,7 @@ export function useForm({ config = {}, initialValues = {}, onSubmit }) {
     handleChange,
     handleSubmit,
     setValues,
-    setErrors,
+    previews,
   };
 }
+
